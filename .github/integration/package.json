@@ -1,0 +1,10 @@
+{
+  "name": "arena1v1-integration-test",
+  "private": true,
+  "version": "1.0.0",
+  "description": "1v1Arena gercek sunucu entegrasyon testi",
+  "dependencies": {
+    "mineflayer": "^4.39.0",
+    "rcon-client": "^4.2.5"
+  }
+}

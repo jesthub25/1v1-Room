@@ -1,0 +1,96 @@
+# ============================================
+#          1v1 ARENA CONFIG
+# ============================================
+# Not: Eski config dosyalarinda olmayan ayarlar plugin acilirken otomatik eklenir.
+
+arena:
+  # Mac suresi (saniye). 600 = 10 dakika. Sure dolarsa mac berabere biter.
+  mac-suresi: 600
+  # Kazananin itemleri toplama suresi (saniye). Bu sure bitince kapilar acilir ve kazanan spawn'a isinlanir.
+  bitis-bekleme-suresi: 30
+  # Berabere bitiste (sure dolunca) kapilarin acilmasina kadar beklenecek sure (saniye).
+  kapi-silme-suresi: 2
+  # Mac sirasinda oyundan cikan oyuncu oldurulsun mu? (true = itemleri arenaya duser, rakip toplar)
+  cikista-oldur: true
+  # Spawn'a isinlanirken efekt oynatilsin mi?
+  efekt-ver: true
+  # Bukkit Effect ismi (ornek: ENDER_SIGNAL, MOBSPAWNER_FLAMES). Bos birakirsan efekt oynatilmaz.
+  teleport-efekti: ENDER_SIGNAL
+  # Mac sirasinda (ve kazanan item toplarken) kullanilabilecek komutlar. arena.bypass yetkisi olanlar muaftir.
+  izinli-komutlar:
+    - 1v1
+    - arena
+    - 1v1arena
+    - help
+
+mesajlar:
+  prefix: "&8[&c1v1Arena&8] &r"
+  yetki-yok: "&cBu komutu kullanmak icin yetkin yok!"
+  oyuncu-degil: "&cBu komutu sadece oyuncular kullanabilir!"
+  arena-bulunamadi: "&c{arena} isimli arena bulunamadi!"
+  arena-zaten-var: "&c{arena} isimli arena zaten mevcut!"
+  arena-olusturuldu: "&a{arena} isimli arena basariyla olusturuldu! &7Simdi kapi ayarla: &e/1v1 arena {arena} <blok>"
+  arena-silindi: "&a{arena} isimli arena basariyla silindi!"
+  reload-tamamlandi: "&aConfig dosyalari yenilendi!"
+  arena-dolu: "&cBu arena suan dolu!"
+  arena-bos: "&cBu arenada yeterli oyuncu yok!"
+  arena-basladi: "&a1v1 basladi! Kapilar kapandi, kacis yok! &cKomut kullanimi yasak!"
+  arena-bitti: "&c1v1 bitti! &e{kazanan} &akazandi!"
+  arena-cooldown: "&eKapilar &c{saniye} &esaniye icinde acilacak!"
+  oyuncu-oldu: "&c{oyuncu} oldu!"
+  oyuncu-cikti: "&c{oyuncu} oyundan cikti!"
+  oyuncu-ayrildi: "&c{oyuncu} arenadan ayrildi!"
+  spawn-ayarlandi: "&aSpawn noktasi ayarlandi!"
+  spawn-yok: "&cSpawn noktasi ayarlanmamis! &e/1v1 setspawn"
+  arenaya-katildin: "&a{arena} &earenasina katildin!"
+  arenadan-ayrildin: "&cArenadan ayrildin."
+  rakip-bekleniyor: "&eRakip bekleniyor... &7(&c{sayi}/2&7)"
+  arena-mesgul: "&cBu arenada su an mac var, giremezsin!"
+  kacis-yok: "&cMac sirasinda arenadan cikamazsin!"
+  komut-yasak: "&c&l1v1 sirasinda komut kullanamazsin!"
+  kaybettin: "&c&lKAYBETTIN!"
+  kazandin: "&a&lKAZANDIN! &e{saniye} saniye icinde itemleri topla!"
+  rakip-cikti: "&c&lRAKIP CIKTI! &aMaci kazandin."
+  kapilar-acildi: "&aKapilar acildi! Spawn'a gonderiliyorsun!"
+  sure-doldu: "&c&lSure doldu! &eMac berabere bitti."
+  mac-bitirildi: "&c{arena} arenasindaki mac bir yetkili tarafindan bitirildi."
+  mac-yok: "&c{arena} arenasinda devam eden mac yok!"
+  mac-var: "&c{arena} arenasinda su an mac var, once bitmesini bekle veya &e/1v1 bitir {arena}"
+  kalan-sure: "&eKalan sure: &c{sure}"
+  gecersiz-isim: "&cArena ismi sadece harf, rakam, _ ve - icerebilir (en fazla 32 karakter)."
+  gecersiz-blok: "&cGecersiz blok ismi: &e{blok}"
+  blok-uygun-degil: "&c{blok} kapi icin uygun degil! Kati ve dusmeyen bir blok sec (ornek: IRON_BARS, GLASS)."
+  secim-yok: "&cOnce alan sec! &7WorldEdit (//wand) &cveya &7/1v1 pos1 &cve &7/1v1 pos2"
+  secim-farkli-dunya: "&cKapi alani arena ile ayni dunyada olmali!"
+  kapi-cok-buyuk: "&cKapi alani cok buyuk! (en fazla {max} blok)"
+  pos-ayarlandi: "&a{pos}. nokta ayarlandi: &e{x}, {y}, {z}"
+  kapi-ayarlandi: "&a&lKAPI AYARLANDI! &7Arena: &e{arena} &7Blok: &e{blok} &7- Arenaya girmek icin alanin icine yuruyun!"
+
+  # Ekranda cikan basliklar (prefix eklenmez)
+  baslik-basladi: "&c&l1v1 BASLADI!"
+  altbaslik-basladi: "&eSure: &c{sure}"
+  baslik-kazandin: "&a&lKAZANDIN!"
+  altbaslik-kazandin: "&e{saniye} saniye item toplama!"
+  baslik-kaybettin: "&c&lKAYBETTIN!"
+  altbaslik-kaybettin: ""
+  baslik-sure-doldu: "&c&lSURE DOLDU!"
+  altbaslik-sure-doldu: "&eBerabere!"
+  altbaslik-son-saniyeler: "&eSon saniyeler!"
+
+# Spawn noktasi (/1v1 setspawn ile ayarlanir). Ayarlanmazsa ana dunyanin spawn'i kullanilir.
+spawn:
+  world: ""
+  x: 0
+  y: 0
+  z: 0
+  yaw: 0
+  pitch: 0
+
+# Ses isimleri: eski enum isimleri (ENTITY_PLAYER_LEVELUP) veya anahtar (entity.player.levelup) olabilir.
+# Bos birakirsan ses calinmaz.
+sesler:
+  kapi-kapanma: BLOCK_IRON_DOOR_CLOSE
+  arena-baslama: ENTITY_PLAYER_LEVELUP
+  arena-bitis: ENTITY_WITHER_DEATH
+  oyuncu-oldu: ENTITY_PLAYER_DEATH
+  kazanma: ENTITY_PLAYER_LEVELUP

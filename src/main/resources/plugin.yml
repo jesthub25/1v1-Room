@@ -1,0 +1,24 @@
+name: 1v1Arena
+version: '${project.version}'
+main: org.jestron.arena1v1.Arena1v1Plugin
+api-version: '1.20'
+author: Jestron
+description: Detayli 1v1 Arena Sistemi
+softdepend: [WorldEdit, FastAsyncWorldEdit]
+
+commands:
+  1v1:
+    description: 1v1 Arena komutlari
+    usage: /<command> [olustur|arena|sil|liste|reload|setspawn|pos1|pos2|bitir]
+    aliases: [arena, 1v1arena]
+
+permissions:
+  arena.admin:
+    description: Arena yonetim yetkisi
+    default: op
+  arena.use:
+    description: Arenaya girme ve arena listesini gorme yetkisi
+    default: true
+  arena.bypass:
+    description: Mac sirasinda komut engelinden ve dolu arena engelinden muaf olur
+    default: false

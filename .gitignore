@@ -1,0 +1,11 @@
+target/
+*.class
+.idea/
+*.iml
+.vscode/
+.DS_Store
+.github/integration/node_modules/
+.github/integration/package-lock.json
+server-*/
+dist/
+__pycache__/

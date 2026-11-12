@@ -1,0 +1,130 @@
+name: Build & Test
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Derleme (spigot-api 1.20.1)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Maven package
+        run: mvn -B -ntp package
+
+      - name: Bytecode surumu kontrolu (Java 17 = 61)
+        run: |
+          cd target && mkdir -p chk && cd chk && unzip -q ../1v1Arena-*.jar
+          javap -v org/jestron/arena1v1/Arena1v1Plugin.class | grep "major version: 61"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 1v1Arena
+          path: target/1v1Arena-*.jar
+          if-no-files-found: error
+
+  integration:
+    name: Paper ${{ matrix.paper }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        paper: ['1.20.1', '1.20.6', '1.21.1', '1.21.4', '1.21.8', '1.21.11', '26.1.x', 'latest']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            25
+            21
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: 1v1Arena
+          path: dist
+
+      - name: Test bagimliliklari
+        working-directory: .github/integration
+        run: npm install --no-audit --no-fund
+
+      - name: Gercek sunucuda test
+        run: bash .github/integration/run.sh "${{ matrix.paper }}" dist/1v1Arena-*.jar
+
+  release:
+    name: Release
+    # main'e push: pom.xml'deki surum icin release yoksa otomatik olusturur (v<surum>).
+    # Ayrica elle tag push edilince veya release yayinlaninca jar eklenir.
+    if: >-
+      github.event_name == 'release' ||
+      (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')))
+    needs: [build, integration]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Surum ve tag belirle
+        id: ver
+        run: |
+          VERSION=$(mvn -q -ntp -DforceStdout help:evaluate -Dexpression=project.version)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG="${{ github.event.release.tag_name }}"
+          elif [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+          else
+            TAG="v$VERSION"
+            if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+              echo "$TAG zaten var, release atlaniyor."
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/download-artifact@v4
+        if: steps.ver.outputs.skip != 'true'
+        with:
+          name: 1v1Arena
+          path: dist
+
+      - uses: softprops/action-gh-release@v2
+        if: steps.ver.outputs.skip != 'true'
+        with:
+          tag_name: ${{ steps.ver.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: 1v1Arena ${{ steps.ver.outputs.version }}
+          files: dist/1v1Arena-*.jar
+          body_path: .github/RELEASE_NOTES.md
+          fail_on_unmatched_files: true
+          make_latest: true
